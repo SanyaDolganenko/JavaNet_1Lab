@@ -31,7 +31,7 @@ public class ComputersController {
     @PostMapping("/add")
     public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
         if (computer != null) {
-            computer.setId(getMaxComputerId());
+            computer.setId(getMaxComputerId() + 1);
             if (computer.getCpu() == null) {
                 computer.setCpu("none");
             }
@@ -43,6 +43,16 @@ public class ComputersController {
         } else {
             return new ResponseEntity<String>("Failed to add, bad request", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseEntity<String> removeComputer(@RequestParam int id) {
+        Computer toRemove = getComputerById(id);
+        if (toRemove != null) {
+            allComputers.remove(toRemove);
+            return new ResponseEntity<>("Successfully removed", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("No such computer with id: " + id, HttpStatus.BAD_REQUEST);
     }
 
     private Computer getComputerById(int id) {
