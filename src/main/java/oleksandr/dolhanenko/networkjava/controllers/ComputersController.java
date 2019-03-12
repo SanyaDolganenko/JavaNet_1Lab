@@ -4,10 +4,7 @@ import oleksandr.dolhanenko.networkjava.model.Computer;
 import oleksandr.dolhanenko.networkjava.utils.ComputerGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +28,24 @@ public class ComputersController {
         }
     }
 
-    public Computer getComputerById(int id) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
+        if (computer != null) {
+            computer.setId(getMaxComputerId());
+            if (computer.getCpu() == null) {
+                computer.setCpu("none");
+            }
+            if (computer.getGpu() == null) {
+                computer.setGpu("none");
+            }
+            allComputers.add(computer);
+            return new ResponseEntity<String>("Successfully added", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("Failed to add, bad request", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private Computer getComputerById(int id) {
         Computer foundComputer = null;
         for (Computer computer : allComputers) {
             if (computer.getId() == id) {
@@ -39,6 +53,16 @@ public class ComputersController {
             }
         }
         return foundComputer;
+    }
+
+    private int getMaxComputerId() {
+        int maxId = -1;
+        for (Computer computer : allComputers) {
+            if (computer.getId() > maxId) {
+                maxId = computer.getId();
+            }
+        }
+        return maxId;
     }
 
 }
