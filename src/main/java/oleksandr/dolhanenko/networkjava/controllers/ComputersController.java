@@ -55,6 +55,24 @@ public class ComputersController {
         return new ResponseEntity<>("No such computer with id: " + id, HttpStatus.BAD_REQUEST);
     }
 
+
+    @PostMapping("/update")
+    public ResponseEntity<String> updateComputer(@RequestBody Computer computer) {
+        if (computer != null) {
+            Computer computerByRequestId = getComputerById(computer.getId());
+            if (computerByRequestId != null) {
+                computerByRequestId.setGpu(computer.getGpu());
+                computerByRequestId.setCpu(computer.getCpu());
+                computerByRequestId.setRamSize(computer.getRamSize());
+                return new ResponseEntity<>("Successfully updated", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("No such computer with id: " + computer.getId(), HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Empty request body", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private Computer getComputerById(int id) {
         Computer foundComputer = null;
         for (Computer computer : allComputers) {
