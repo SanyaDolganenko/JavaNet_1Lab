@@ -1,7 +1,8 @@
 package oleksandr.dolhanenko.networkjava.controllers;
 
 import oleksandr.dolhanenko.networkjava.model.Computer;
-import oleksandr.dolhanenko.networkjava.utils.ComputerGenerator;
+import oleksandr.dolhanenko.networkjava.utils.IComputersDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +12,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/computers")
 public class ComputersController {
-    private List<Computer> allComputers = ComputerGenerator.generate(5);
+    @Autowired
+    private IComputersDataService dataService;
 
     @GetMapping
     public ResponseEntity<List<Computer>> allComputers() {
-        return new ResponseEntity<>(allComputers, HttpStatus.OK);
+        return new ResponseEntity<>(dataService.getAllComputers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Computer> getComputer(@PathVariable int id) {
-        Computer foundComputer = getComputerById(id);
+        Computer foundComputer = dataService.getComputer(id);
         if (foundComputer == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -31,14 +33,7 @@ public class ComputersController {
     @PostMapping("/add")
     public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
         if (computer != null) {
-            computer.setId(getMaxComputerId() + 1);
-            if (computer.getCpu() == null) {
-                computer.setCpu("none");
-            }
-            if (computer.getGpu() == null) {
-                computer.setGpu("none");
-            }
-            allComputers.add(computer);
+            dataService.addComputer(computer);
             return new ResponseEntity<String>("Successfully added", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Failed to add, bad request", HttpStatus.BAD_REQUEST);
@@ -47,23 +42,20 @@ public class ComputersController {
 
     @DeleteMapping("/remove")
     public ResponseEntity<String> removeComputer(@RequestParam int id) {
-        Computer toRemove = getComputerById(id);
-        if (toRemove != null) {
-            allComputers.remove(toRemove);
+        boolean removed = dataService.removeComputer(id);
+        if (removed) {
             return new ResponseEntity<>("Successfully removed", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No such computer with id: " + id, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("No such computer with id: " + id, HttpStatus.BAD_REQUEST);
     }
 
 
     @PostMapping("/update")
     public ResponseEntity<String> updateComputer(@RequestBody Computer computer) {
         if (computer != null) {
-            Computer computerByRequestId = getComputerById(computer.getId());
-            if (computerByRequestId != null) {
-                computerByRequestId.setGpu(computer.getGpu());
-                computerByRequestId.setCpu(computer.getCpu());
-                computerByRequestId.setRamSize(computer.getRamSize());
+            boolean updated = dataService.updateComputer(computer);
+            if (updated) {
                 return new ResponseEntity<>("Successfully updated", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("No such computer with id: " + computer.getId(), HttpStatus.BAD_REQUEST);
@@ -72,25 +64,4 @@ public class ComputersController {
             return new ResponseEntity<>("Empty request body", HttpStatus.BAD_REQUEST);
         }
     }
-
-    private Computer getComputerById(int id) {
-        Computer foundComputer = null;
-        for (Computer computer : allComputers) {
-            if (computer.getId() == id) {
-                foundComputer = computer;
-            }
-        }
-        return foundComputer;
-    }
-
-    private int getMaxComputerId() {
-        int maxId = -1;
-        for (Computer computer : allComputers) {
-            if (computer.getId() > maxId) {
-                maxId = computer.getId();
-            }
-        }
-        return maxId;
-    }
-
 }

@@ -3,6 +3,7 @@ package oleksandr.dolhanenko.networkjava.utils;
 import oleksandr.dolhanenko.networkjava.model.Computer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ public class ComputerGenerator {
     private static final Random random = new Random();
 
     public static List<Computer> generate(int count) {
-        List<Computer> computers = new ArrayList<>();
+        List<Computer> computers = Collections.synchronizedList(new ArrayList<>());
         for (int i = 0; i < count; i++) {
             String randomGpu = gpuNames[random.nextInt(gpuNames.length)];
             String randomCpu = cpuNames[random.nextInt(cpuNames.length)];
