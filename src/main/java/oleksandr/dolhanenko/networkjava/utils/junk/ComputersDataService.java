@@ -1,6 +1,7 @@
-package oleksandr.dolhanenko.networkjava.utils;
+package oleksandr.dolhanenko.networkjava.utils.junk;
 
 import oleksandr.dolhanenko.networkjava.model.Computer;
+import oleksandr.dolhanenko.networkjava.utils.ComputerGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

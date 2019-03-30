@@ -1,4 +1,4 @@
-package oleksandr.dolhanenko.networkjava.utils;
+package oleksandr.dolhanenko.networkjava.utils.junk;
 
 import oleksandr.dolhanenko.networkjava.model.Computer;
 import org.springframework.context.annotation.Primary;

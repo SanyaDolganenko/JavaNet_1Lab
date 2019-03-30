@@ -1,8 +1,9 @@
 package oleksandr.dolhanenko.networkjava.controllers;
 
 import oleksandr.dolhanenko.networkjava.model.Computer;
+import oleksandr.dolhanenko.networkjava.model.User;
 import oleksandr.dolhanenko.networkjava.utils.ComputerRepository;
-import oleksandr.dolhanenko.networkjava.utils.IComputersDataService;
+import oleksandr.dolhanenko.networkjava.utils.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ComputersController {
     @Autowired
     private ComputerRepository computerRepository;
+
 
     @GetMapping
     public ResponseEntity<List<Computer>> allComputers() {
