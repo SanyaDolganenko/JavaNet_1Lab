@@ -23,7 +23,7 @@ public class Computer {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "user_computers",
+    @JoinTable(name = "computer_users",
             joinColumns = {@JoinColumn(name = "computer_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     @JsonIgnore
