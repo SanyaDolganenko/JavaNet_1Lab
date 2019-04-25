@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Computers</title>
+</head>
+<body>
+<div th:switch="${computers}">
+    <h2 th:case="null">No computers yet!</h2>
+    <div th:case="*">
+        <h2>Computers</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>CPU</th>
+                <th>GPU</th>
+                <th>Ram size</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="computer : ${computers}">
+                <td th:text="${computer.id}"></td>
+                <td th:text="${computer.cpu}"></td>
+                <td th:text="${computer.gpu}"></td>
+                <td th:text="${computer.ramSize}"></td>
+                <td><a
+                        th:href="@{/car/mvc/edit/{id}(id=${computer.id})}">Edit</a></td>
+                <td><a
+                        th:href="@{/car/mvc/delete/{id}(id=${computer.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/car/mvc/addEmpty">Add a new car</a></p>
+</div>
+</body>
+</html>
