@@ -34,7 +34,15 @@ public class TestController {
                 computerRepository.save(computer);
             }
         }
-
         return "redirect:computers";
+    }
+
+    @GetMapping("/remove/{id}")
+    public String removeComputer(@PathVariable("id") int id) {
+        if (computerRepository.findById(id).isPresent()) {
+            computerRepository.deleteById(id);
+
+        }
+        return "redirect:http://localhost:8080/test/computers";
     }
 }
