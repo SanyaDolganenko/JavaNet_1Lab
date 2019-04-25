@@ -30,9 +30,7 @@ public class TestController {
     @PostMapping("/update")
     public String updateComputer(Computer computer) {
         if (computer != null) {
-            if (computerRepository.findById(computer.getId()).isPresent()) {
-                computerRepository.save(computer);
-            }
+            computerRepository.save(computer);
         }
         return "redirect:computers";
     }
@@ -45,4 +43,18 @@ public class TestController {
         }
         return "redirect:http://localhost:8080/test/computers";
     }
+
+    @GetMapping("/add")
+    public String addComputer(Model model) {
+        model.addAttribute("computer", new Computer());
+        return "computer-new";
+    }
+
+//    @PostMapping("/save")
+//    public String saveComputer(Computer computer) {
+//        if (computer != null) {
+//            computerRepository.save(computer);
+//        }
+//        return "redirect:http://localhost:8080/test/computers";
+//    }
 }
