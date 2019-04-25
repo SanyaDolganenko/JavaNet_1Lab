@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit computer</title>
+</head>
+<body>
+<form action="#" th:action="@{/test/update}"
+      th:object="${computer}" method="post">
+    <input type="hidden" th:field="*{id}" id="id" placeholder="id">
+    <label for="cpu">CPU</label>
+    <input type="text" th:field="*{cpu}" id="cpu" placeholder="CPU">
+    <label for="gpu">GPU</label>
+    <input type="text" th:field="*{gpu}" id="gpu" placeholder="GPU">
+    <label for="ramSize">Ram size</label>
+    <input type="number" th:field="*{ramSize}" id="ramSize" placeholder="8">
+    <input type="submit" value="Update computer">
+</form>
+</body>
+</html>

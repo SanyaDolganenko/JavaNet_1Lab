@@ -26,14 +26,14 @@
                 <td th:text="${computer.gpu}"></td>
                 <td th:text="${computer.ramSize}"></td>
                 <td><a
-                        th:href="@{/car/mvc/edit/{id}(id=${computer.id})}">Edit</a></td>
+                        th:href="@{/test/edit/{id}(id=${computer.id})}">Edit</a></td>
                 <td><a
-                        th:href="@{/car/mvc/delete/{id}(id=${computer.id})}">Delete</a></td>
+                        th:href="@{/computer/mvc/delete/{id}(id=${computer.id})}">Delete</a></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p><a href="/car/mvc/addEmpty">Add a new car</a></p>
+    <p><a href="/computers/add">Add a new computer</a></p>
 </div>
 </body>
 </html>
