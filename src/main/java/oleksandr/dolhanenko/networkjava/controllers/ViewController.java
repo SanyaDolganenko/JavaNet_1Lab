@@ -1,19 +1,22 @@
 package oleksandr.dolhanenko.networkjava.controllers;
 
 import oleksandr.dolhanenko.networkjava.model.Computer;
+import oleksandr.dolhanenko.networkjava.model.User;
 import oleksandr.dolhanenko.networkjava.utils.ComputerRepository;
+import oleksandr.dolhanenko.networkjava.utils.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/view")
-public class ComputerViewController {
+public class ViewController {
     @Autowired
     private ComputerRepository computerRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @GetMapping("/computers")
     public String messages(Model model) {
@@ -50,11 +53,39 @@ public class ComputerViewController {
         return "computer-new";
     }
 
-//    @PostMapping("/save")
-//    public String saveComputer(Computer computer) {
-//        if (computer != null) {
-//            computerRepository.save(computer);
-//        }
-//        return "redirect:http://localhost:8080/test/computers";
-//    }
+
+    @GetMapping("/users")
+    public String users(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "users";
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable("id") int id, Model model) {
+        model.addAttribute("user", userRepository.getOne(id));
+        return "user-edit";
+    }
+
+    @PostMapping("/users/update")
+    public String updateUser(User user) {
+        if (user != null) {
+            userRepository.save(user);
+        }
+        return "redirect:http://localhost:8080/view/users";
+    }
+
+    @GetMapping("/users/remove/{id}")
+    public String removeUser(@PathVariable("id") int id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+        }
+        return "redirect:http://localhost:8080/view/users";
+    }
+
+    @GetMapping("/users/add")
+    public String addUser(Model model) {
+        model.addAttribute("user", new User());
+        return "user-new";
+    }
+
 }
