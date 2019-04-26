@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @SuppressWarnings("ALL")
-@RestController
+//@RestController
 @RequestMapping("/locks")
 public class LocksController {
     String topic = "CC50E3566FDD";

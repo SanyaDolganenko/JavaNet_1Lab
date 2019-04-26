@@ -24,6 +24,12 @@ public class ViewController {
         return "computers";
     }
 
+    @GetMapping("/computer-users")
+    public String computerUsers(Model model) {
+        model.addAttribute("computers", computerRepository.findAll());
+        return "computer-users";
+    }
+
     @GetMapping("/computers/edit/{id}")
     public String greeting(@PathVariable("id") int id, Model model) {
         model.addAttribute("computer", computerRepository.getOne(id));

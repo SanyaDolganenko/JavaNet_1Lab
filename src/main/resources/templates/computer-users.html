@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Computer users</title>
+</head>
+<body>
+<div th:switch="${computers}">
+    <h2 th:case="null">No computer users yet!</h2>
+    <div th:case="*">
+        <h2>Computer-users</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Computer ID</th>
+                <th>User IDs</th>
+            </tr>
+            </thead>
+        </table>
+        <tr th:each="computer : ${computers}">
+            <table>
+                <thead>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td th:text="${computer.id}          "></td>
+                    <td th:each="user : ${computer.users}">
+                        <h3 th:text="${user.id}"></h3>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </tr>
+
+    </div>
+    <p><a href="/view/computers/add">Add a new computer</a></p>
+</div>
+</body>
+</html>
