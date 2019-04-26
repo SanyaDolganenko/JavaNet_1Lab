@@ -6,7 +6,7 @@
     <title>Edit computer</title>
 </head>
 <body>
-<form action="#" th:action="@{/test/update}"
+<form action="#" th:action="@{/view/computers/update}"
       th:object="${computer}" method="post">
     <input type="hidden" th:field="*{id}" id="id" placeholder="id">
     <label for="cpu">CPU</label>

@@ -10,8 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/view")
+public class ComputerViewController {
     @Autowired
     private ComputerRepository computerRepository;
 
@@ -21,30 +21,30 @@ public class TestController {
         return "computers";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/computers/edit/{id}")
     public String greeting(@PathVariable("id") int id, Model model) {
         model.addAttribute("computer", computerRepository.getOne(id));
         return "computer-edit";
     }
 
-    @PostMapping("/update")
+    @PostMapping("/computers/update")
     public String updateComputer(Computer computer) {
         if (computer != null) {
             computerRepository.save(computer);
         }
-        return "redirect:computers";
+        return "redirect:http://localhost:8080/view/computers";
     }
 
-    @GetMapping("/remove/{id}")
+    @GetMapping("/computers/remove/{id}")
     public String removeComputer(@PathVariable("id") int id) {
         if (computerRepository.findById(id).isPresent()) {
             computerRepository.deleteById(id);
 
         }
-        return "redirect:http://localhost:8080/test/computers";
+        return "redirect:http://localhost:8080/view/computers";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/computers/add")
     public String addComputer(Model model) {
         model.addAttribute("computer", new Computer());
         return "computer-new";
