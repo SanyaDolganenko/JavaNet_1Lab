@@ -9,12 +9,12 @@ import org.springframework.web.util.HtmlUtils;
 @Controller
 public class SocketController {
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
+    @MessageMapping("/request")
+    @SendTo("/computers/result")
     public Message greeting(Message message) throws Exception {
         Message resultMessage = new Message();
-        resultMessage.setMessage("Hello, " +
-                HtmlUtils.htmlEscape(message.getMessage()) + "!");
+        resultMessage.setMessage("Requested: " +
+                HtmlUtils.htmlEscape(message.getMessage()));
         return resultMessage;
     }
 
