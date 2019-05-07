@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import oleksandr.dolhanenko.networkjava.model.Computer;
 import oleksandr.dolhanenko.networkjava.model.Message;
+import oleksandr.dolhanenko.networkjava.utils.ComputerGenerator;
 import oleksandr.dolhanenko.networkjava.utils.ComputerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -47,9 +48,18 @@ public class SocketController {
                 computerRepository.delete(computer);
                 if (allCount - computerRepository.count() == 1) {
                     message.setMessage("Successfully deleted computer");
-                }else{
+                } else {
                     message.setMessage("Error deleting computer");
                 }
+            }
+        } else if (request.contains("ADD")) {
+            computer = ComputerGenerator.generate(1).get(0);
+            long count = computerRepository.count();
+            computerRepository.save(computer);
+            if (computerRepository.count() - count == 1) {
+                message.setMessage("Added computer: " + computerToJsonSafe(computer));
+            } else {
+                message.setMessage("Error generating computer");
             }
         }
         return message;
