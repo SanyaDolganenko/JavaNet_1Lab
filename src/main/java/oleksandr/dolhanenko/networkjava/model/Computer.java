@@ -4,12 +4,13 @@ package oleksandr.dolhanenko.networkjava.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "computers")
-public class Computer {
+public class Computer implements Serializable {
     @Id
     @Column(name = "computer_id")
     @GeneratedValue
