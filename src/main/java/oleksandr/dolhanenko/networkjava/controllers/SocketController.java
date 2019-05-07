@@ -20,7 +20,7 @@ public class SocketController {
 
     @MessageMapping("/request")
     @SendTo("/computers/result")
-    public Message greeting(Message message) throws Exception {
+    public Message request(Message message) {
         return processRequest(message.getMessage());
     }
 
@@ -39,65 +39,85 @@ public class SocketController {
             }
         }
         if (request.contains("GET")) {
-            if (computer != null) {
-                message.setMessage(computerToJsonSafe(computer));
-            }
+            processGetRequest(computer, message);
         } else if (request.contains("DELETE")) {
-            if (computer != null) {
-                long allCount = computerRepository.count();
-                computerRepository.delete(computer);
-                if (allCount - computerRepository.count() == 1) {
-                    message.setMessage("DELETED computer");
-                } else {
-                    message.setMessage("Error deleting computer");
-                }
-            }
+            processDeleteRequest(computer, message);
         } else if (request.contains("ADD")) {
-            computer = ComputerGenerator.generate(1).get(0);
-            long count = computerRepository.count();
-            computerRepository.save(computer);
-            if (computerRepository.count() - count == 1) {
-                message.setMessage("ADDED computer: " + computerToJsonSafe(computer));
-            } else {
-                message.setMessage("Error generating computer");
-            }
+            processAddRequest(message);
         } else if (request.contains("UPDATE")) {
-            if (computer != null) {
-                int queryIndexStart = request.indexOf(")") + 1;
-                String query = request.substring(queryIndexStart);
-                String[] queries = query.split(";");
-                for (int i = 0; i < queries.length; i++) {
-                    String[] current = queries[i].split("=");
-                    if (current.length == 2) {
-                        String name = current[0].trim().toLowerCase();
-                        String value = current[1].trim();
-                        switch (name) {
-                            case "cpu": {
-                                computer.setCpu(value);
-                            }
-                            break;
-                            case "gpu": {
-                                computer.setGpu(value);
-                            }
-                            break;
-                            case "ram": {
-                                try {
-                                    int ramSize = Integer.parseInt(value);
-                                    if (ramSize > 0) {
-                                        computer.setRamSize(ramSize);
-                                    }
-                                } catch (NumberFormatException ignored) {
-
-                                }
-                            }
-                        }
-                    }
-                }
-                computerRepository.save(computer);
-                message.setMessage("UPDATED: " + computerToJsonSafe(computerRepository.findById(computer.getId()).get()));
-            }
+            processUpdateRequest(computer, request, message);
+        } else {
+            message.setMessage("Unknown query");
         }
         return message;
+    }
+
+    private void processGetRequest(Computer computer, Message message) {
+        if (computer != null) {
+            message.setMessage(computerToJsonSafe(computer));
+        }
+    }
+
+    private void processDeleteRequest(Computer computer, Message message) {
+        if (computer != null) {
+            long allCount = computerRepository.count();
+            computerRepository.delete(computer);
+            if (allCount - computerRepository.count() == 1) {
+                message.setMessage("DELETED computer");
+            } else {
+                message.setMessage("Error deleting computer");
+            }
+        }
+    }
+
+    private void processAddRequest(Message message) {
+        Computer computer = ComputerGenerator.generate(1).get(0);
+        long count = computerRepository.count();
+        computerRepository.save(computer);
+        if (computerRepository.count() - count == 1) {
+            message.setMessage("ADDED computer: " + computerToJsonSafe(computer));
+        } else {
+            message.setMessage("Error generating computer");
+        }
+
+    }
+
+    private void processUpdateRequest(Computer computer, String request, Message message) {
+        if (computer != null) {
+            int queryIndexStart = request.indexOf(")") + 1;
+            String rawQuery = request.substring(queryIndexStart);
+            String[] queries = rawQuery.split(";");
+            for (String query : queries) {
+                String[] current = query.split("=");
+                if (current.length == 2) {
+                    String name = current[0].trim().toLowerCase();
+                    String value = current[1].trim();
+                    switch (name) {
+                        case "cpu": {
+                            computer.setCpu(value);
+                        }
+                        break;
+                        case "gpu": {
+                            computer.setGpu(value);
+                        }
+                        break;
+                        case "ram": {
+                            try {
+                                int ramSize = Integer.parseInt(value);
+                                if (ramSize > 0) {
+                                    computer.setRamSize(ramSize);
+                                }
+                            } catch (NumberFormatException ignored) {
+
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            computerRepository.save(computer);
+            message.setMessage("UPDATED: " + computerToJsonSafe(computerRepository.findById(computer.getId()).get()));
+        }
     }
 
     private Computer getComputerSafe(int id) {
