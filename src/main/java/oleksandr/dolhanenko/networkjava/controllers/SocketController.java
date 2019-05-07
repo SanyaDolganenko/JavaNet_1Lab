@@ -47,7 +47,7 @@ public class SocketController {
                 long allCount = computerRepository.count();
                 computerRepository.delete(computer);
                 if (allCount - computerRepository.count() == 1) {
-                    message.setMessage("Successfully deleted computer");
+                    message.setMessage("DELETED computer");
                 } else {
                     message.setMessage("Error deleting computer");
                 }
@@ -57,9 +57,44 @@ public class SocketController {
             long count = computerRepository.count();
             computerRepository.save(computer);
             if (computerRepository.count() - count == 1) {
-                message.setMessage("Added computer: " + computerToJsonSafe(computer));
+                message.setMessage("ADDED computer: " + computerToJsonSafe(computer));
             } else {
                 message.setMessage("Error generating computer");
+            }
+        } else if (request.contains("UPDATE")) {
+            if (computer != null) {
+                int queryIndexStart = request.indexOf(")") + 1;
+                String query = request.substring(queryIndexStart);
+                String[] queries = query.split(";");
+                for (int i = 0; i < queries.length; i++) {
+                    String[] current = queries[i].split("=");
+                    if (current.length == 2) {
+                        String name = current[0].trim().toLowerCase();
+                        String value = current[1].trim();
+                        switch (name) {
+                            case "cpu": {
+                                computer.setCpu(value);
+                            }
+                            break;
+                            case "gpu": {
+                                computer.setGpu(value);
+                            }
+                            break;
+                            case "ram": {
+                                try {
+                                    int ramSize = Integer.parseInt(value);
+                                    if (ramSize > 0) {
+                                        computer.setRamSize(ramSize);
+                                    }
+                                } catch (NumberFormatException ignored) {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                computerRepository.save(computer);
+                message.setMessage("UPDATED: " + computerToJsonSafe(computerRepository.findById(computer.getId()).get()));
             }
         }
         return message;
