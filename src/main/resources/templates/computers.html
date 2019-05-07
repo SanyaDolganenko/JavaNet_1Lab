@@ -25,10 +25,12 @@
                 <td th:text="${computer.cpu}"></td>
                 <td th:text="${computer.gpu}"></td>
                 <td th:text="${computer.ramSize}"></td>
-                <td><a
-                        th:href="@{/view/computers/edit/{id}(id=${computer.id})}">Edit</a></td>
-                <td><a
-                        th:href="@{/view/computers/remove/{id}(id=${computer.id})}">Remove</a></td>
+                <td>
+                    <a th:href="@{/view/computers/edit/{id}(id=${computer.id})}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/view/computers/remove/{id}(id=${computer.id})}">Remove</a>
+                </td>
             </tr>
             </tbody>
         </table>

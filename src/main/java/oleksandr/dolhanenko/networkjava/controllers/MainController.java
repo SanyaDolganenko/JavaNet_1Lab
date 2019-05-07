@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
-    @GetMapping
-    public ResponseEntity<String> root() {
-        return new ResponseEntity<String>("Долганенко Олександр, ПЗПІ-16-3, My First Spring application ", HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<String> root() {
+//        return new ResponseEntity<String>("Долганенко Олександр, ПЗПІ-16-3, My First Spring application ", HttpStatus.OK);
+//    }
 }
